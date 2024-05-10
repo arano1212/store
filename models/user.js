@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const userEnum = ['customer', 'admin', 'employee']
+const userEnum = ['admin', 'employee']
 
 const userSchema = new mongoose.Schema({
   dni: {
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
   rol: {
     type: String,
     required: true,
-    default: 'customer',
+    default: 'employee',
     enum: userEnum
   },
   isActive: { type: Boolean, default: true }
