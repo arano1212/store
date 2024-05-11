@@ -93,7 +93,7 @@ const historyTicketByUser = async (req, res) => {
   try {
     const userId = req.params.userId
     const tickets = await Ticket.find({ seller: userId })
-      .populate('products', 'name price').populate('seller', 'firstName lastName dni')
+      .populate('products', 'name price').populate('seller', 'firstName lastName dni rol')
     if (!tickets || !tickets.length === 0) {
       return res.status(404).json({ msg: 'user and tickets no found' })
     }
