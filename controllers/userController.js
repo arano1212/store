@@ -1,4 +1,5 @@
 import User from '../models/user.js'
+import Ticket from '../models/ticket.js'
 
 const createUser = async (req, res) => {
   try {
@@ -85,10 +86,28 @@ const deleteUser = async (req, res) => {
   }
 }
 
+const historyTicketByUser = async (req, res) => {
+  if (!req.params.userId.match(/^[0-9a-fA-F]{24}/)) {
+    return res.status(400).json({ msg: 'invalid user ID' })
+  }
+  try {
+    const userId = req.params.userId
+    const tickets = await Ticket.find({ seller: userId })
+      .populate('products', 'name price').populate('seller', 'firstName lastName dni')
+    if (!tickets || !tickets.length === 0) {
+      return res.status(404).json({ msg: 'user and tickets no found' })
+    }
+    res.status(200).json(tickets)
+  } catch (error) {
+    res.status(404).json({ error: error.message })
+  }
+}
+
 export {
   getAllUsers,
   createUser,
   getUserById,
   updateUserById,
-  deleteUser
+  deleteUser,
+  historyTicketByUser
 }

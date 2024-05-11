@@ -85,10 +85,32 @@ const deleteProduct = async (req, res) => {
   }
 }
 
+const getProductQuery = async (req, res) => {
+  const queryDB = { isActive: true }
+
+  const queryKeys = ['name']
+
+  queryKeys.forEach(key => {
+    if (req.query[key]) {
+      queryDB[key] = { $regex: new RegExp(req.query[key], 'i') }
+    }
+  })
+  try {
+    const product = await Product.find(queryDB)
+    if (!product) {
+      return res.status(404).json({ msg: 'product no found ' })
+    }
+    res.status(200).json(product)
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
 export {
   createProduct,
   getAllPRoducts,
   getProductByid,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getProductQuery
 }
